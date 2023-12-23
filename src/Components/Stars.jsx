@@ -1,81 +1,78 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Stars } from "@react-three/drei";
-import { useRef } from "react";
-import { useControls, button } from "leva";
+import { Preload, Points, PointMaterial } from "@react-three/drei";
+import { useRef, Suspense } from "react";
+import { useControls, button, Leva } from "leva";
+import * as random from "maath/random/dist/maath-random.esm";
 
-const StarsObj = () => {
+const Stars = (props) => {
     const ref = useRef();
 
-    const [{ radius, depth, count, factor, saturation, fade }, set] = useControls("Stars", () => ({
-            radius: {
-                value: 100,
+    const [{ starBoxSize, stride, starSize }, set] = useControls("Stars", () => ({
+            starBoxSize: {
+                value: 2,
                 min: 0,
-                max: 500,
-                step: 10,
+                max: 5,
+                step: 0.1,
             },
-            depth: {
-                value: 50,
-                min: 0,
-                max: 150,
-                step: 5,
-            },
-            count: {
-                value: 2000,
-                min: 0,
-                max: 10000,
-                step: 10,
-            },
-            factor: {
-                value: 4,
+            stride: {
+                value: 3,
                 min: 0,
                 max: 10,
-                step: 1,
+                step: 0.2,
             },
-            saturation: {
-                value: 0,
-                min: 0,
-                max: 1,
-                step: 0.01,
-            },
-            fade: {
-                value: true,
+            starSize: {
+                value: 0.0025,
+                min: 0.0005,
+                max: 0.01,
+                step: 0.0005,
             },
             reset: button(() => {
                 set({
-                    radius: 100,
-                    depth: 50,
-                    count: 2000,
-                    factor: 4,
-                    saturation: 0,
-                    fade: true,
+                    starBoxSize: 2,
+                    stride: 3,
+                    starSize: 0.0025,
                 });
             }),
         }));
 
+    const sphere = random.inSphere(new Float32Array(10000), { radius: starBoxSize });
+
     useFrame((state, delta) => {
         ref.current.rotation.x -= delta / 150;
-        ref.current.rotation.y -= delta / 150;
+        ref.current.rotation.y -= delta / 175;
     });
 
     return (
-        <Stars
-            ref={ref}
-            radius={radius} // Radius of the inner sphere (default=100)
-            depth={depth} // Depth of area where stars should fit (default=50)
-            count={count} // Amount of stars (default=2000)
-            factor={factor} // Size factor (default=4)
-            saturation={saturation} // Saturation 0-1 (default=0)
-            fade={fade} // Faded dots (default=true)
-        />
+        <group rotation={[0, 0, Math.PI / 4]}>
+            <Points
+                ref={ref}
+                positions={sphere}
+                stride={stride}
+                frustumCulled
+                {...props}
+            >
+                <PointMaterial
+                    transparent
+                    color="#f272c8"
+                    size={starSize}
+                    sizeAttenuation={true}
+                    depthWrite={false}
+                />
+            </Points>
+        </group>
     );
 };
 
-export default function StarsCanva(){
+export default function StarsCanva() {
     return (
         <div className="h-auto w-full absolute inset-0 z-[-1]">
-            <Canvas>
-                <StarsObj />
+            <Canvas camera={{ position: [0, 0, 1.15] }}>
+                <Suspense fallback={null}>
+                    <Stars />
+                </Suspense>
+
+                <Preload all />
             </Canvas>
         </div>
     );
-};
+}
