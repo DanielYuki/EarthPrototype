@@ -1,8 +1,9 @@
 import { Suspense, useRef } from "react";
 import { Canvas, useLoader, useFrame } from "@react-three/fiber";
 import { OrbitControls, Preload, Stats } from "@react-three/drei";
-import { TextureLoader, MeshPhysicalMaterial } from "three";
+import { TextureLoader, MeshPhysicalMaterial, AxesHelper } from "three";
 import CustomShaderMaterial from "three-custom-shader-material";
+import { gsap } from "gsap";
 
 import CanvasLoader from "./CanvasLoader";
 
@@ -13,22 +14,51 @@ import atmosphereFragmentShader from "../assets/Shaders/atmosphereFragment.glsl"
 
 const Earth = () => {
     const earthTexture = useLoader(TextureLoader, "/EarthTexture.jpg");
+    const earthRef = useRef();
+    const groupRef = useRef();
+
+    const tiltAngle = -(23.5 * (Math.PI / 180));
+
+    const mouseCoords = {
+        x: 0,
+        y: 0,
+    };
+
+    addEventListener("mousemove", (e) => {
+        mouseCoords.x = (e.clientX / innerWidth) * 2 - 1;
+        mouseCoords.y = -(e.clientY / innerHeight) * 2 + 1;
+    });
+
+    useFrame((state, delta) => {
+        groupRef.current.rotation.y += (delta / 10)
+
+        const elapsedTime = state.clock.getElapsedTime();
+        groupRef.current.rotation.x = (tiltAngle * Math.sin(elapsedTime/10) * 0.8);
+
+        gsap.to(earthRef.current.rotation, {
+            y: mouseCoords.x * 0.3,
+            x: -mouseCoords.y * 0.2,
+            duration: 2,
+        });
+    });
 
     return (
-        <mesh>
-            <sphereGeometry args={[1, 64, 64]} attach="geometry" />
+        <group ref={groupRef} >
+            <mesh ref={earthRef} >
+                {/* <axesHelper args={[2]} /> */}
+                <sphereGeometry args={[1, 64, 64]} attach="geometry"/>
 
-            <shaderMaterial 
-                attach="material"
-                vertexShader={earthVertexShader}
-                fragmentShader={earthFragmentShader}
-                uniforms={{
-                    uTexture: { value: earthTexture },
-                }}
-                lights={false}
-            />
+                <shaderMaterial
+                    attach="material"
+                    vertexShader={earthVertexShader}
+                    fragmentShader={earthFragmentShader}
+                    uniforms={{
+                        uTexture: { value: earthTexture },
+                    }}
+                    lights={false}
+                />
 
-            {/* <CustomShaderMaterial
+                {/* <CustomShaderMaterial
                 baseMaterial={MeshPhysicalMaterial}
                 vertexShader={earthVertexShader}
                 fragmentShader={earthFragmentShader}
@@ -39,7 +69,8 @@ const Earth = () => {
                 metalness={0.25}
                 // silent
             /> */}
-        </mesh>
+            </mesh>
+        </group>
     );
 };
 
@@ -81,13 +112,13 @@ export default function EarthCanva() {
 
             <Preload all />
             <OrbitControls
-                autoRotate
-                autoRotateSpeed={0.75}
+                // autoRotate
+                // autoRotateSpeed={0.75}
                 enablePan={false}
                 maxPolarAngle={(Math.PI * 2) / 3}
                 minPolarAngle={Math.PI / 3}
             />
-            <Stats />
+            {/* <Stats /> */}
         </Canvas>
     );
 }

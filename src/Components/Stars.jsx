@@ -7,7 +7,9 @@ import * as random from "maath/random/dist/maath-random.esm";
 const Stars = (props) => {
     const ref = useRef();
 
-    const [{ starBoxSize, stride, starSize }, set] = useControls("Stars", () => ({
+    const [{ starBoxSize, stride, starSize }, set] = useControls(
+        "Stars",
+        () => ({
             starBoxSize: {
                 value: 2,
                 min: 0,
@@ -33,9 +35,12 @@ const Stars = (props) => {
                     starSize: 0.0025,
                 });
             }),
-        }));
+        })
+    );
 
-    const sphere = random.inSphere(new Float32Array(10000), { radius: starBoxSize });
+    const sphere = random.inSphere(new Float32Array(10000), {
+        radius: starBoxSize,
+    });
 
     useFrame((state, delta) => {
         ref.current.rotation.x -= delta / 150;
@@ -65,14 +70,17 @@ const Stars = (props) => {
 
 export default function StarsCanva() {
     return (
-        <div className="h-auto w-full absolute inset-0 z-[-1]">
-            <Canvas camera={{ position: [0, 0, 1.15] }}>
-                <Suspense fallback={null}>
-                    <Stars />
-                </Suspense>
+        <>
+            <Leva collapsed={true} hidden={false} />
+            <div className="h-auto w-full absolute inset-0 z-[-1]">
+                <Canvas camera={{ position: [0, 0, 1.15] }}>
+                    <Suspense fallback={null}>
+                        <Stars />
+                    </Suspense>
 
-                <Preload all />
-            </Canvas>
-        </div>
+                    <Preload all />
+                </Canvas>
+            </div>
+        </>
     );
 }
