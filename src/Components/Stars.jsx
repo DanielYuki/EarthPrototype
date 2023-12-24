@@ -11,9 +11,9 @@ const Stars = (props) => {
         "Stars",
         () => ({
             starBoxSize: {
-                value: 2,
+                value: 10,
                 min: 0,
-                max: 5,
+                max: 15,
                 step: 0.1,
             },
             stride: {
@@ -23,22 +23,22 @@ const Stars = (props) => {
                 step: 0.2,
             },
             starSize: {
-                value: 0.0025,
+                value: 0.0075,
                 min: 0.0005,
-                max: 0.01,
+                max: 0.05,
                 step: 0.0005,
             },
             reset: button(() => {
                 set({
-                    starBoxSize: 2,
+                    starBoxSize: 10,
                     stride: 3,
-                    starSize: 0.0025,
+                    starSize: 0.005,
                 });
             }),
         })
     );
 
-    const sphere = random.inSphere(new Float32Array(10000), {
+    const sphere = random.inSphere(new Float32Array(15000), {
         radius: starBoxSize,
     });
 
@@ -68,19 +68,22 @@ const Stars = (props) => {
     );
 };
 
-export default function StarsCanva() {
-    return (
-        <>
-            <Leva collapsed={true} hidden={false} />
-            <div className="h-auto w-full absolute inset-0 z-[-1]">
-                <Canvas camera={{ position: [0, 0, 1.15] }}>
-                    <Suspense fallback={null}>
-                        <Stars />
-                    </Suspense>
+// export default function StarsCanva() {
+//     return (
+//         <>
+//             <Leva collapsed={true} hidden={false} />
+//             <div className="h-auto w-full absolute inset-0 z-[-1]">
+//                 <Canvas camera={{ position: [0, 0, 1.15] }}>
+//                     <Suspense fallback={null}>
+//                         <Stars />
+//                     </Suspense>
 
-                    <Preload all />
-                </Canvas>
-            </div>
-        </>
-    );
-}
+//                     <Preload all />
+//                 </Canvas>
+//             </div>
+//         </>
+//     );
+// }
+
+// skyboxV2: spaguetti code edition
+export default Stars;

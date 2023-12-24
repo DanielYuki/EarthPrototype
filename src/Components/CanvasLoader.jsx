@@ -5,7 +5,8 @@ export default function CanvasLoader() {
 
     return (
         <Html center>
-            <h1 className=" text-white">
+            <img src="/icon512.png" alt="Earth Placeholder" />
+            <h1 className=" text-white mt-4">
                 LOADING... {progress.toFixed(2)}%
             </h1>
         </Html>
