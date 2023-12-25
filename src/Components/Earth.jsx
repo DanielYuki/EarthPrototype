@@ -7,6 +7,7 @@ import { gsap } from "gsap";
 
 import CanvasLoader from "./CanvasLoader";
 import Stars from "./Stars";
+import Sun from "./Sun";
 
 import earthVertexShader from "../assets/Shaders/earthVertex.glsl";
 import earthFragmentShader from "../assets/Shaders/earthFragment.glsl";
@@ -14,13 +15,17 @@ import atmosphereVertexShader from "../assets/Shaders/atmosphereVertex.glsl";
 import atmosphereFragmentShader from "../assets/Shaders/atmosphereFragment.glsl";
 
 const Earth = () => {
-    const earthTexture = useLoader(TextureLoader, "/EarthTexture.jpg");
-    const earthBumpMap = useLoader(TextureLoader, "/EarthBumpMap.jpg");
-    const earthTextureNight = useLoader(
-        TextureLoader,
-        "/EarthTextureNight.jpg"
-    );
-    const oceanMap = useLoader(TextureLoader, "/OceanMapV3.jpg");
+    // const earthTexture = useLoader(TextureLoader, "/EarthTexture.jpg");
+    // const earthBumpMap = useLoader(TextureLoader, "/EarthBumpMap.jpg");
+    // const earthTextureNight = useLoader(
+    //     TextureLoader,
+    //     "/EarthTextureNight.jpg"
+    // );
+    // const oceanMap = useLoader(TextureLoader, "/OceanMapV3.jpg");
+
+    const [earthTexture, earthBumpMap, earthTextureNight, oceanMap, cloudMap] = useLoader(TextureLoader, [
+        "/EarthTexture.jpg", "/EarthBumpMap.jpg", "/EarthTextureNight.jpg", "/OceanMapV3.jpg", "/CloudMap.jpg"
+    ]);
 
     const earthRef = useRef();
     const groupRef = useRef();
@@ -86,13 +91,13 @@ const Earth = () => {
                     emissiveIntensity={0.35}
                 />
             </mesh>
-            <Clouds />
+            <Clouds cloudsTexture={cloudMap} />
         </group>
     );
 };
 
-const Clouds = () => {
-    const cloudsTexture = useLoader(TextureLoader, "/CloudMap.jpg");
+const Clouds = ({cloudsTexture}) => {
+    // const cloudsTexture = useLoader(TextureLoader, "/CloudMap.jpg");
     const cloudsRef = useRef();
 
     useFrame((state, delta) => {
@@ -105,7 +110,7 @@ const Clouds = () => {
             <meshStandardMaterial
                 attach="material"
                 transparent
-                opacity={0.25}
+                opacity={0.45}
                 depthWrite={false}
                 map={cloudsTexture}
                 blending={2}
@@ -138,14 +143,15 @@ export default function EarthCanva() {
         >
             <Suspense fallback={<CanvasLoader />}>
                 <ambientLight intensity={0.15} color={[0.6, 0.8, 1]} />
-                <directionalLight
+                {/* <directionalLight
                     position={[100, 0, 100]}
-                    intensity={2.5}
+                    intensity={2}
                     color={[0.8, 0.8, 1]}
                     // castShadow
                     // shadow-mapSize-width={1024}
                     // shadow-mapSize-height={1024}
-                />
+                /> */}
+                <Sun />
                 <Earth />
                 <Atmosphere />
                 <Stars />
@@ -155,11 +161,12 @@ export default function EarthCanva() {
             <OrbitControls
                 // autoRotate
                 // autoRotateSpeed={0.75}
+                enableZoom={false}
                 enablePan={false}
                 maxPolarAngle={(Math.PI * 2) / 3}
                 minPolarAngle={Math.PI / 3}
             />
-            {/* <Stats /> */}
+            <Stats />
         </Canvas>
     );
 }

@@ -11,9 +11,9 @@ const Stars = (props) => {
         "Stars",
         () => ({
             starBoxSize: {
-                value: 10,
-                min: 0,
-                max: 15,
+                value: 50,
+                min: 5,
+                max: 150,
                 step: 0.1,
             },
             stride: {
@@ -23,14 +23,14 @@ const Stars = (props) => {
                 step: 0.2,
             },
             starSize: {
-                value: 0.0075,
+                value: 0.01,
                 min: 0.0005,
                 max: 0.05,
                 step: 0.0005,
             },
             reset: button(() => {
                 set({
-                    starBoxSize: 10,
+                    starBoxSize: 50,
                     stride: 3,
                     starSize: 0.005,
                 });
