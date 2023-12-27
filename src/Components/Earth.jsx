@@ -8,6 +8,7 @@ import { gsap } from "gsap";
 import CanvasLoader from "./CanvasLoader";
 import Stars from "./Stars";
 import Sun from "./Sun";
+import Camera from "./Camera";
 
 import earthVertexShader from "../assets/Shaders/earthVertex.glsl";
 import earthFragmentShader from "../assets/Shaders/earthFragment.glsl";
@@ -23,9 +24,14 @@ const Earth = () => {
     // );
     // const oceanMap = useLoader(TextureLoader, "/OceanMapV3.jpg");
 
-    const [earthTexture, earthBumpMap, earthTextureNight, oceanMap, cloudMap] = useLoader(TextureLoader, [
-        "/EarthTexture.jpg", "/EarthBumpMap.jpg", "/EarthTextureNight.jpg", "/OceanMapV3.jpg", "/CloudMap.jpg"
-    ]);
+    const [earthTexture, earthBumpMap, earthTextureNight, oceanMap, cloudMap] =
+        useLoader(TextureLoader, [
+            "/EarthTexture.jpg",
+            "/EarthBumpMap.jpg",
+            "/EarthTextureNight.jpg",
+            "/OceanMapV3.jpg",
+            "/CloudMap.jpg",
+        ]);
 
     const earthRef = useRef();
     const groupRef = useRef();
@@ -96,7 +102,7 @@ const Earth = () => {
     );
 };
 
-const Clouds = ({cloudsTexture}) => {
+const Clouds = ({ cloudsTexture }) => {
     // const cloudsTexture = useLoader(TextureLoader, "/CloudMap.jpg");
     const cloudsRef = useRef();
 
@@ -138,7 +144,7 @@ export default function EarthCanva() {
         <Canvas
             // frameloop="demand"
             shadows
-            camera={{ position: [0, 0, 5], fov: 45 }}
+            camera={{ position: [100, 0, 50], fov: 45 }} //initial position
             gl={{ preserveDrawingBuffer: true }}
         >
             <Suspense fallback={<CanvasLoader />}>
@@ -158,15 +164,8 @@ export default function EarthCanva() {
             </Suspense>
 
             <Preload all />
-            <OrbitControls
-                // autoRotate
-                // autoRotateSpeed={0.75}
-                enableZoom={false}
-                enablePan={false}
-                maxPolarAngle={(Math.PI * 2) / 3}
-                minPolarAngle={Math.PI / 3}
-            />
-            <Stats />
+            <Camera />
+            {/* <Stats /> */}
         </Canvas>
     );
 }
