@@ -2,7 +2,7 @@ import { Canvas, useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
 
 const Sun = () => {
-    const sunTexture = useLoader(TextureLoader, "/SunTexture.jpg");
+    const sunTexture = useLoader(TextureLoader, "./SunTexture.jpg");
 
     return (
         <group position={[100,0,100]}>

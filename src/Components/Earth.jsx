@@ -26,11 +26,11 @@ const Earth = () => {
 
     const [earthTexture, earthBumpMap, earthTextureNight, oceanMap, cloudMap] =
         useLoader(TextureLoader, [
-            "/EarthTexture.jpg",
-            "/EarthBumpMap.jpg",
-            "/EarthTextureNight.jpg",
-            "/OceanMapV3.jpg",
-            "/CloudMap.jpg",
+            "./EarthTexture.jpg",
+            "./EarthBumpMap.jpg",
+            "./EarthTextureNight.jpg",
+            "./OceanMapV3.jpg",
+            "./CloudMap.jpg",
         ]);
 
     const earthRef = useRef();
